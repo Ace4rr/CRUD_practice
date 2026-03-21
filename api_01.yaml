@@ -1,1 +1,193 @@
 openapi: 3.0.0
+info:
+  title: Sample API
+  description: Optional multiline or single-line descriiption
+  version: 0.1.9
+
+paths:
+  /api/auth/register:
+    post:
+      summary: register user
+      requestBody:
+        required: true 
+        content:
+          application/json:
+            schema:
+              type: object
+              required: 
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                name: 
+                  type: string
+      responses:
+        '200':
+          description: User registered
+
+  /api/auth/login:
+    post:
+      summary: login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: User logged succesfully
+
+  /api/auth/logout:
+    post:
+      summary: logout user
+      responses:
+        '200':
+          description: User logged out succesfully
+
+  /api/auth/me:
+    get:
+      summary: get current user
+      responses:
+        '200':
+          description: current user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  email:
+                    type: string
+                  name:
+                    type: string
+  
+
+
+  /api/scenarios:
+    get:
+      summary: get scenario
+      responses:
+        '200':
+          description: scenario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    author_id:
+                      type: string
+                    public_id:
+                      type: string
+                    start_step_id:
+                      type: string
+    post:
+      summary: create scenario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - status
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                status:
+                  type: string
+      responses:
+        '200':
+          description: scenario created
+          
+  /api/scenarios/{scenarioId}:
+  get:
+    summary: Get scenario by id
+    parameters:
+      - name: scenarioId
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: Scenario data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                title:
+                  type: string
+                description:
+                  type: string
+                author_id:
+                  type: string
+                status:
+                  type: string
+                public_id:
+                  type: string
+                start_step_id:
+                  type: string
+
+  patch:
+    summary: Update scenario
+    parameters:
+      - name: scenarioId
+        in: path
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              status:
+                type: string
+    responses:
+      '200':
+        description: Scenario updated
+
+  delete:
+    summary: Delete scenario
+    parameters:
+      - name: scenarioId
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: Scenario deleted
