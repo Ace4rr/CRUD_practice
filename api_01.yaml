@@ -124,70 +124,290 @@ paths:
           description: scenario created
           
   /api/scenarios/{scenarioId}:
-  get:
-    summary: Get scenario by id
-    parameters:
-      - name: scenarioId
-        in: path
+    get:
+      summary: Get scenario by id
+      parameters:
+        - name: scenarioId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Scenario data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  author_id:
+                    type: string
+                  status:
+                    type: string
+                  public_id:
+                    type: string
+                  start_step_id:
+                    type: string
+
+    patch:
+      summary: Update scenario
+      parameters:
+        - name: scenarioId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
         required: true
-        schema:
-          type: string
-    responses:
-      '200':
-        description: Scenario data
         content:
           application/json:
             schema:
               type: object
               properties:
-                id:
-                  type: string
                 title:
                   type: string
                 description:
                   type: string
-                author_id:
-                  type: string
                 status:
                   type: string
-                public_id:
-                  type: string
-                start_step_id:
-                  type: string
+      responses:
+        '200':
+          description: Scenario updated
 
-  patch:
-    summary: Update scenario
-    parameters:
-      - name: scenarioId
-        in: path
-        required: true
-        schema:
-          type: string
-    requestBody:
-      required: true
-      content:
-        application/json:
+    delete:
+      summary: Delete scenario
+      parameters:
+        - name: scenarioId
+          in: path
+          required: true
           schema:
-            type: object
-            properties:
-              title:
-                type: string
-              description:
-                type: string
-              status:
-                type: string
-    responses:
-      '200':
-        description: Scenario updated
+            type: string
+      responses:
+        '200':
+          description: Scenario deleted
 
-  delete:
-    summary: Delete scenario
-    parameters:
-      - name: scenarioId
-        in: path
+  
+
+  /api/scenarios/{scenarioId}/steps:
+    get:
+      summary: Get steps of current scenario
+      parameters:
+        - name: scenarioId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of steps
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    scenario_id:
+                      type: string
+                    type:
+                      type: string
+                      enum: [start, text, choice, end]
+                    content:
+                      type: string
+                    next_step_id:
+                      type: string
+
+    post:
+      summary: Create step in current scenario
+      parameters:
+        - name: scenarioId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
         required: true
-        schema:
-          type: string
-    responses:
-      '200':
-        description: Scenario deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - type
+                - content
+              properties:
+                type:
+                  type: string
+                  enum: [start, text, choice, end]
+                content:
+                  type: string
+                next_step_id:
+                  type: string
+      responses:
+        '200':
+          description: Step created
+
+  /api/steps/{stepId}:
+    patch:
+      summary: Update step
+      parameters:
+        - name: stepId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [start, text, choice, end]
+                content:
+                  type: string
+                next_step_id:
+                  type: string
+      responses:
+        '200':
+          description: Step updated
+
+    delete:
+      summary: Delete step
+      parameters:
+        - name: stepId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Step deleted
+
+  /api/steps/{stepId}/choices:
+    get:
+      summary: Get choices of current step
+      parameters:
+        - name: stepId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of choices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    step_id:
+                      type: string
+                    text:
+                      type: string
+                    weight:
+                      type: integer
+                    next_step_id:
+                      type: string
+
+    post:
+      summary: Create choice for step
+      parameters:
+        - name: stepId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - text
+              properties:
+                text:
+                  type: string
+                weight:
+                  type: integer
+                next_step_id:
+                  type: string
+      responses:
+        '200':
+          description: Choice created
+
+  /api/choices/{choiceId}:
+    patch:
+      summary: Update choice
+      parameters:
+        - name: choiceId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                weight:
+                  type: integer
+                next_step_id:
+                  type: string
+      responses:
+        '200':
+          description: Choice updated
+
+    delete:
+      summary: Delete choice
+      parameters:
+        - name: choiceId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Choice deletedscenarioId
+
+  /api/scenarios/{scenarioId}/start-step:
+    post:
+      summary: set start step of scenario 
+      parameters:
+        - name: scenarioId
+          in: path
+          required: true 
+          schema:
+            type: string
+      requiestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - step_id
+              properties:
+                step_id:
+                  type: string
+      responses:
+        '200':
+          description: Start step set succesfully            
