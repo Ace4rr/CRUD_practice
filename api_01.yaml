@@ -411,3 +411,98 @@ paths:
       responses:
         '200':
           description: Start step set succesfully            
+
+  /api/play/{publicId}:
+    get:
+      summary: Get published scenario for playing
+      parameters:
+        - name: publicId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Scenario for play
+  
+    /api/play/{publicId}/start:
+    post:
+      summary: Start scenario attempt
+      parameters:
+        - name: publicId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Attempt started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  attempt_id:
+                    type: string
+    
+    /api/attempts/{attemptId}:
+      get:
+        summary: Get attempt result
+        parameters:
+          - name: attemptId
+            in: path
+            required: true
+            schema:
+              type: string
+        responses:
+          '200':
+            description: Attempt info
+    
+    /api/attempts/{attemptId}/steps/{stepId}/answer:
+      post:
+        summary: Answer step
+        parameters:
+          - name: attemptId
+            in: path
+            required: true
+          - name: stepId
+            in: path
+            required: true
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  choice_id:
+                    type: string
+        responses:
+          '200':
+            description: Answer saved
+    
+    /api/attempts/{attemptId}/finish:
+      post:
+        summary: Finish attempt
+        parameters:
+          - name: attemptId
+            in: path
+            required: true
+        responses:
+          '200':
+            description: Attempt finished
+
+    /api/scenarios/{scenarioId}/publish:
+      post:
+        summary: Publish scenario
+        parameters:
+          - name: scenarioId
+            in: path
+            required: true
+            schema:
+              type: string
+        responses:
+          '200':
+            description: Scenario published
+
+    
